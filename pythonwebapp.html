@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Programs</title>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 20px;
+        background-color: #f5f5f5;
+    }
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1, h2, h3 {
+        color: #333;
+    }
+    .sidebar {
+        position: fixed;
+        width: 200px;
+        padding: 10px;
+        background-color: #f0f0f0;
+        border-radius: 5px;
+        margin-right: 20px;
+        height: auto;
+        z-index: 1;
+        overflow-y: auto;
+        max-height: 90vh;
+    }
+    #program-selector {
+        width: 100%;
+        padding: 8px;
+        margin: 5px 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+    .main-content {
+        margin-left: 220px;
+        width: calc(100% - 240px);
+        padding: 10px;
+    }
+    select, input, button {
+        padding: 8px;
+        margin: 5px 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    button {
+        background-color: #4CAF50;
+        color: white;
+        cursor: pointer;
+        border: none;
+    }
+    button:hover {
+        background-color: #45a049;
+    }
+    .result {
+        padding: 10px;
+        background-color: #e8f5e9;
+        border-radius: 4px;
+        margin: 10px 0;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 10px 0;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    .plot {
+        width: 100%;
+        height: auto;
+        margin: 20px 0;
+    }
+    .program {
+        display: none;
+    }
+    .program.active {
+        display: block;
+    }
+    .method-fields {
+        display: none;
+    }
+
+    @media (max-width: 768px) {
+        .sidebar {
+            position: relative;
+            width: 100%;
+            margin-right: 0;
+            margin-bottom: 20px;
+        }
+        
+        .main-content {
+            margin-left: 0;
+            width: 100%;
+        }
+    }
+     </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Physics Programs</h1>
+        
+        <div class="sidebar">
+            <h3>Select a program:</h3>
+            <select id="program-selector" onchange="showProgram()">
+                <option value="program1">Program 1: Polarimeter</option>
+                <option value="program2">Program 2: Calibration of a High Range Voltmeter</option>
+                <option value="program3">Program 3: Sonometer</option>
+                <option value="program4">Program 4: BG Absolute Capacity of a Condenser</option>
+                <option value="program5">Program 5: Astable Multivibrator</option>
+                <option value="program6">Program 6: Air Wedge</option>
+                <option value="program7">Program 7: Newton Rings</option>
+                <option value="program8">Program 8: Minimum Deviation</option>
+                <option value="program9">Program 9: Small Angle Prism</option>
+                <option value="program10">Program 10: Spectrometer i-i' Curve</option>
+                <option value="program11">Program 11: Young's Modulus (Koenig Method)</option>
+                <option value="program12">Program 12: Young's Modulus (Non-uniform Bending)</option>
+                <option value="program13">Program 13: Young's Modulus (Stretching Method)</option>
+                <option value="program14">Program 14: Young's Modulus (Uniform Bending)</option>
+                <option value="program15">Program 15: Young's Modulus (Cantilever)</option>
+                <option value="program16">Program 16: Absolute Mutual Inductance</option>
+                <option value="program17">Program 17: Comparison of Mutual Inductance</option>
+                <option value="program18">Program 18: High Resistance by Leakage Method</option>
+                <option value="program19">Program 19: Internal Resistance of a Cell BG</option>
+                <option value="program20">Program 20: Self Inductance of a Coil by Anderson Method</option>
+            </select>
+        </div>
+        
+        <div class="main-content">
+            <!-- Program 1: Polarimeter -->
+            <div id="program1" class="program active">
+                <h2>Program 1: Polarimeter</h2>
+                <div>
+                    <label for="theta_deg">Enter θ/c degrees:</label>
+                    <input type="number" id="theta_deg" value="0">
+                    
+                    <label for="theta_min">Enter θ/c minutes:</label>
+                    <input type="number" id="theta_min" value="0.0" step="0.1">
+                    
+                    <label for="l1">Enter l (in meter):</label>
+                    <input type="number" id="l1" value="1.0" step="0.1">
+                    
+                    <button onclick="calculatePolarimeterValue()">Calculate Value</button>
+                    
+                    <div id="polarimeter-result" class="result"></div>
+                </div>
+                
+                <h3>Error Calculation</h3>
+                <div>
+                    <label for="standard_deg">Enter standard value degrees:</label>
+                    <input type="number" id="standard_deg" value="0">
+                    
+                    <label for="standard_min">Enter standard value minutes:</label>
+                    <input type="number" id="standard_min" value="0.0" step="0.1">
+                    
+                    <label for="observed_deg">Enter observed value degrees:</label>
+                    <input type="number" id="observed_deg" value="0">
+                    
+                    <label for="observed_min">Enter observed value minutes:</label>
+                    <input type="number" id="observed_min" value="0.0" step="0.1">
+                    
+                    <button onclick="calculateErrorPercentage()">Calculate Error Percentage</button>
+                    
+                    <div id="error-result" class="result"></div>
+                </div>
+            </div>
+            
+            <!-- Program 2: Calibration of a High Range Voltmeter -->
+            <div id="program2" class="program">
+                <h2>Program 2: Calibration of a High Range Voltmeter</h2>
+                <div>
+                    <label for="n_calculations">Enter the number of calculations:</label>
+                    <input type="number" id="n_calculations" value="1" min="1">
+                    
+                    <label for="l1_voltmeter">Enter l1:</label>
+                    <input type="number" id="l1_voltmeter" value="1.0" step="0.1">
+                    
+                    <div id="voltmeter-inputs"></div>
+                    
+                    <button onclick="generateVoltmeterResults()">Generate Results</button>
+                    
+                    <div id="voltmeter-results"></div>
+                </div>
+            </div>
+            
+            <!-- Program 3: Sonometer -->
+            <div id="program3" class="program">
+                <h2>Program 3: Sonometer</h2>
+                <div>
+                    <label for="M_sonometer">Enter the mass/length^2 (M/l²) in kg/m²:</label>
+                    <input type="number" id="M_sonometer" value="0.0" step="0.001">
+                    
+                    <label for="r_sonometer">Enter the radius of the wire (r) in meters:</label>
+                    <input type="number" id="r_sonometer" value="0.0" step="0.0001">
+                    
+                    <label for="rho_sonometer">Enter the density of the wire (ρ) in kg/m^3:</label>
+                    <input type="number" id="rho_sonometer" value="0.0" step="0.1">
+                    
+                    <button onclick="calculateSonometerFrequency()">Calculate Frequency</button>
+                    
+                    <div id="sonometer-result" class="result"></div>
+                </div>
+            </div>
+            
+            <!-- Program 4: BG Absolute Capacity of a Condenser -->
+            <div id="program4" class="program">
+                <h2>Program 4: BG Absolute Capacity of a Condenser</h2>
+                <div>
+                    <label for="T_condenser">Enter T:</label>
+                    <input type="number" id="T_condenser" value="0.0" step="0.0001">
+                    
+                    <label for="d1_R2">Enter d1/R2:</label>
+                    <input type="number" id="d1_R2" value="0.0" step="0.0001">
+                    
+                    <label for="r2_d2">Enter r2/d2:</label>
+                    <input type="number" id="r2_d2" value="0.0" step="0.0001">
+                    
+                    <label for="G_condenser">Enter G:</label>
+                    <input type="number" id="G_condenser" value="0.0" step="0.0001">
+                    
+                    <label for="a1_condenser">Enter a1:</label>
+                    <input type="number" id="a1_condenser" value="0.0" step="0.0001">
+                    
+                    <label for="a11_condenser">Enter a11:</label>
+                    <input type="number" id="a11_condenser" value="0.0" step="0.0001">
+                    
+                    <button onclick="calculateCondenserCapacitance()">Calculate Capacitance</button>
+                    
+                    <div id="condenser-result" class="result"></div>
+                </div>
+            </div>
+            
+            <!-- Program 5: Astable Multivibrator -->
+            <div id="program5" class="program">
+                <h2>Program 5: Astable Multivibrator</h2>
+                <div>
+                    <label for="n_multivibrator">Enter number of times you want to calculate:</label>
+                    <input type="number" id="n_multivibrator" value="1" min="1">
+                    
+                    <div id="multivibrator-inputs"></div>
+                    
+                    <div id="multivibrator-results"></div>
+                </div>
+            </div>
+            
+            <!-- Program 6: Air Wedge -->
+            <div id="program6" class="program">
+                <h2>Program 6: Air Wedge</h2>
+                <div>
+                    <label for="l_airwedge">Enter the distance between the wire (l) in meters:</label>
+                    <input type="number" id="l_airwedge" value="0.0" step="0.0001">
+                    
+                    <label for="beta_airwedge">Enter the width of the ring (β) in meters:</label>
+                    <input type="number" id="beta_airwedge" value="0.0" step="0.0001">
+                    
+                    <label for="m_airwedge">Enter the number of rings (m):</label>
+                    <input type="number" id="m_airwedge" value="0">
+                    
+                    <button onclick="calculateAirWedgeThickness()">Calculate Thickness</button>
+                    
+                    <div id="airwedge-result" class="result"></div>
+                </div>
+            </div>
+            
+            <!-- Program 7: Newton Rings -->
+            <div id="program7" class="program">
+                <h2>Program 7: Newton Rings</h2>
+                <div>
+                    <label for="r_n">Enter the radius of the nth ring in meters:</label>
+                    <input type="number" id="r_n" value="0.0" step="0.0001">
+                    
+                    <label for="r_nm">Enter the radius of the (n+m)th ring in meters:</label>
+                    <input type="number" id="r_nm" value="0.0" step="0.0001">
+                    
+                    <label for="m_newton">Enter the number of rings after nth ring (m):</label>
+                    <input type="number" id="m_newton" value="0">
+                    
+                    <button onclick="computeNewtonR()">Compute R</button>
+                    
+                    <div id="newton-result" class="result"></div>
+                </div>
+            </div>
+            
+            <!-- Program 8: Minimum Deviation -->
+            <div id="program8" class="program">
+                <h2>Program 8: Minimum Deviation</h2>
+                <div>
+                    <label for="n_deviation">Enter the number of calculations:</label>
+                    <input type="number" id="n_deviation" value="1" min="1">
+                    
+                    <div id="deviation-inputs"></div>
+                    
+                    <div id="deviation-results"></div>
+                </div>
+            </div>
+            
+            <!-- Program 9: Small Angle Prism -->
+            <div id="program9" class="program">
+                <h2>Program 9: Small Angle Prism</h2>
+                <div>
+                    <label for="method">Choose a method to calculate the refractive index:</label>
+                    <select id="method" onchange="showMethodFields()">
+                        <option value="normal_incidence">Normal Incidence Method</option>
+                        <option value="normal_emergence">Normal Emergence Method</option>
+                        <option value="minimum_deviation">Minimum Deviation Method</option>
+                    </select>
+                    
+                    <div id="normal_incidence_fields" class="method-fields">
+                        <label for="A_deg_ni">Enter degrees for angle of prism (A):</label>
+                        <input type="number" id="A_deg_ni" value="0.0">
+                        
+                        <label for="A_min_ni">Enter minutes for angle of prism (A):</label>
+                        <input type="number" id="A_min_ni" value="0.0" step="0.1">
+                        
+                        <label for="d_deg_ni">Enter degrees for angle of deviation (d):</label>
+                        <input type="number" id="d_deg_ni" value="0.0">
+                        
+                        <label for="d_min_ni">Enter minutes for angle of deviation (d):</label>
+                        <input type="number" id="d_min_ni" value="0.0" step="0.1">
+                    </div>
+                    
+                    <div id="normal_emergence_fields" class="method-fields" style="display:none;">
+                        <label for="i_deg_ne">Enter degrees for angle of incidence (i):</label>
+                        <input type="number" id="i_deg_ne" value="0.0">
+                        
+                        <label for="i_min_ne">Enter minutes for angle of incidence (i):</label>
+                        <input type="number" id="i_min_ne" value="0.0" step="0.1">
+                        
+                        <label for="A_deg_ne">Enter degrees for angle of prism (A):</label>
+                        <input type="number" id="A_deg_ne" value="0.0">
+                        
+                        <label for="A_min_ne">Enter minutes for angle of prism (A):</label>
+                        <input type="number" id="A_min_ne" value="0.0" step="0.1">
+                    </div>
+                    
+                    <div id="minimum_deviation_fields" class="method-fields" style="display:none;">
+                        <label for="D_deg_md">Enter degrees for angle of minimum deviation (D):</label>
+                        <input type="number" id="D_deg_md" value="0.0">
+                        
+                        <label for="D_min_md">Enter minutes for angle of minimum deviation (D):</label>
+                        <input type="number" id="D_min_md" value="0.0" step="0.1">
+                        
+                        <label for="A_deg_md">Enter degrees for angle of prism (A):</label>
+                        <input type="number" id="A_deg_md" value="0.0">
+                        
+                        <label for="A_min_md">Enter minutes for angle of prism (A):</label>
+                        <input type="number" id="A_min_md" value="0.0" step="0.1">
+                    </div>
+                    
+                    <button onclick="calculateRefractiveIndex()">Calculate Refractive Index</button>
+                    
+                    <div id="prism-result" class="result"></div>
+                </div>
+            </div>
+            
+            <!-- Program 10: Spectrometer i-i' curve -->
+            <div id="program10" class="program">
+                <h2>Program 10: Spectrometer i-i' Curve</h2>
+                <div>
+                    <label for="n_spectrometer">Enter the number of values:</label>
+                    <input type="number" id="n_spectrometer" value="1" min="1">
+                    
+                    <div id="spectrometer-inputs"></div>
+                    
+                    <button onclick="plotSpectrometerResults()">Plot Results</button>
+                    
+                    <div id="spectrometer-results"></div>
+                    <div id="spectrometer-plot" class="plot"></div>
+                </div>
+            </div>
+            
+            <!-- Program 11: Young's modulus (Koenig method) -->
+            <div id="program11" class="program">
+                <h2>Program 11: Young's Modulus (Koenig Method)</h2>
+                <div>
+                    <label for="frequency_koenig">Enter the frequency of vibration (Hz):</label>
+                    <input type="number" id="frequency_koenig" value="0.0" step="0.1">
+                    
+                    <label for="length_koenig">Enter the length of the beam (m):</label>
+                    <input type="number" id="length_koenig" value="0.0" step="0.001">
+                    
+                    <label for="width_koenig">Enter the width of the beam (m):</label>
+                    <input type="number" id="width_koenig" value="0.0" step="0.001">
+                    
+                    <label for="height_koenig">Enter the height of the beam (m):</label>
+                    <input type="number" id="height_koenig" value="0.0" step="0.001">
+                    
+                    <label for="density_koenig">Enter the density of the material (kg/m³):</label>
+                    <input type="number" id="density_koenig" value="0.0" step="0.1">
+                    
+                    <button onclick="calculateYoungsModulusKoenig()">Calculate Young's Modulus</button>
+                    
+                    <div id="koenig-result" class="result"></div>
+                </div>
+            </div>
+            
+            <!-- Program 12: Young's modulus (Non-uniform bending) -->
+            <div id="program12" class="program">
+                <h2>Program 12: Young's Modulus (Non-uniform Bending)</h2>
+                <div>
+                    <label for="force_nonuniform">Enter applied force (N):</label>
+                    <input type="number" id="force_nonuniform" value="0.0" step="0.1">
+                    
+                    <label for="original_length_nonuniform">Enter original length (m):</label>
+                    <input type="number" id="original_length_nonuniform" value="0.0" step="0.001">
+                    
+                    <label for="change_length_nonuniform">Enter change in length (m):</label>
+                    <input type="number" id="change_length_nonuniform" value="0.0" step="0.0001">
+                    
+                    <label for="area_nonuniform">Enter cross-sectional area (m²):</label>
+                    <input type="number" id="area_nonuniform" value="0.0" step="0.0001">
+                    
+                    <button onclick="calculateYoungsModulusNonuniform()">Calculate Young's Modulus</button>
+                    
+                    <div id="nonuniform-result" class="result"></div>
+                </div>
+            </div>
+            
+            <!-- Program 13: Young's modulus (Stretching method) -->
+            <div id="program13" class="program">
+                <h2>Program 13: Young's Modulus (Stretching Method)</h2>
+                <div>
+                    <label for="F_stretching">Enter the applied force (N):</label>
+                    <input type="number" id="F_stretching" value="0.0" step="0.1">
+                    
+                    <label for="L_stretching">Enter the original length (m):</label>
+                    <input type="number" id="L_stretching" value="0.0" step="0.001">
+                    
+                    <label for="A_stretching">Enter the cross-sectional area (m²):</label>
+                    <input type="number" id="A_stretching" value="0.0" step="0.0001">
+                    
+                    <label for="delta_L_stretching">Enter the change in length (m):</label>
+                    <input type="number" id="delta_L_stretching" value="0.0" step="0.0001">
+                    
+                    <button onclick="calculateYoungsModulusStretching()">Calculate Young's Modulus</button>
+                    
+                    <div id="stretching-result" class="result"></div>
+                </div>
+            </div>
+            
+            <!-- Program 14: Young's modulus (Uniform bending) -->
+            <div id="program14" class="program">
+                <h2>Program 14: Young's Modulus (Uniform Bending)</h2>
+                <div>
+                    <label for="m_uniform">Enter mass (kg):</label>
+                    <input type="number" id="m_uniform" value="0.0" step="0.001">
+                    
+                    <label for="L_uniform">Enter length of the beam (m):</label>
+                    <input type="number" id="L_uniform" value="0.0" step="0.001">
+                    
+                    <label for="b_uniform">Enter breadth of the beam (m):</label>
+                    <input type="number" id="b_uniform" value="0.0" step="0.001">
+                    
+                    <label for="d_uniform">Enter thickness of the beam (m):</label>
+                    <input type="number" id="d_uniform" value="0.0" step="0.001">
+                    
+                    <label for="y_uniform">Enter depression (m):</label>
+                    <input type="number" id="y_uniform" value="0.0" step="0.0001">
+                    
+                    <button onclick="calculateYoungsModulusUniform()">Calculate Young's Modulus</button>
+                    
+                    <div id="uniform-result" class="result"></div>
+                </div>
+            </div>
+            
+            <!-- Program 15: Young's modulus (Cantilever) -->
+            <div id="program15" class="program">
+                <h2>Program 15: Young's Modulus (Cantilever)</h2>
+                <div>
+                    <label for="L_cantilever">Enter the length of the cantilever (m):</label>
+                    <input type="number" id="L_cantilever" value="0.0" step="0.001">
+                    
+                    <label for="F_cantilever">Enter the applied force (N):</label>
+                    <input type="number" id="F_cantilever" value="0.0" step="0.1">
+                    
+                    <label for="b_cantilever">Enter the width of the beam (m):</label>
+                    <input type="number" id="b_cantilever" value="0.0" step="0.001">
+                    
+                    <label for="d_cantilever">Enter the thickness (depth) of the beam (m):</label>
+                    <input type="number" id="d_cantilever" value="0.0" step="0.001">
+                    
+                    <label for="delta_cantilever">Enter the deflection (m):</label>
+                    <input type="number" id="delta_cantilever" value="0.0" step="0.0001">
+                    
+                    <button onclick="calculateYoungsModulusCantilever()">Calculate Young's Modulus</button>
+                    
+                    <div id="cantilever-result" class="result"></div>
+                </div>
+            </div>
+            
+            <!-- Program 16: Absolute mutual inductance -->
+            <div id="program16" class="program">
+                <h2>Program 16: Absolute Mutual Inductance</h2>
+                <div>
+                    <label for="r_inductance">Enter the fractional resistance (r):</label>
+                    <input type="number" id="r_inductance" value="0.0" step="0.0001">
+                    
+                    <label for="T_inductance">Enter the time in seconds (T):</label>
+                    <input type="number" id="T_inductance" value="0.0" step="0.0001">
+                    
+                    <label for="a1_inductance">Enter the maximum distance from center for one oscillation (a1):</label>
+                    <input type="number" id="a1_inductance" value="0.0" step="0.0001">
+                    
+                    <label for="a11_inductance">Enter the maximum distance from center for the eleventh oscillation (a11):</label>
+                    <input type="number" id="a11_inductance" value="0.0" step="0.0001">
+                    
+                    <label for="d1_inductance">Enter the first kick in meters (d1):</label>
+                    <input type="number" id="d1_inductance" value="0.0" step="0.0001">
+                    
+                    <label for="d2_inductance">Enter the second kick in meters (d2):</label>
+                    <input type="number" id="d2_inductance" value="0.0" step="0.0001">
+                    
+                    <button onclick="calculateMutualInductance()">Calculate Mutual Inductance</button>
+                    
+                    <div id="inductance-result" class="result"></div>
+                </div>
+            </div>
+            
+            <!-- Program 17: Comparison of mutual inductance -->
+            <div id="program17" class="program">
+                <h2>Program 17: Comparison of Mutual Inductance</h2>
+                <div>
+                    <label for="S1">Enter the resistance of the secondary coil S1 (in ohms):</label>
+                    <input type="number" id="S1" value="0.0" step="0.01">
+                    
+                    <label for="S2">Enter the resistance of the secondary coil S2 (in ohms):</label>
+                    <input type="number" id="S2" value="0.0" step="0.01">
+                    
+                    <label for="R1">Enter the resistance box value R1 (in ohms):</label>
+                    <input type="number" id="R1" value="0.0" step="0.01">
+                    
+                    <label for="R2">Enter the resistance box value R2 (in ohms):</label>
+                    <input type="number" id="R2" value="0.0" step="0.01">
+                    
+                    <button onclick="calculateMutualInductanceRatio()">Calculate Ratio</button>
+                    
+                    <div id="mutual-inductance-result" class="result"></div>
+                </div>
+            </div>
+            
+            <!-- Program 18: High resistance by leakage method -->
+            <div id="program18" class="program">
+                <h2>Program 18: High Resistance by Leakage Method</h2>
+                <div>
+                    <label for="C_leakage">Enter capacitance (C) in microfarads:</label>
+                    <input type="number" id="C_leakage" value="0.0" step="0.0001">
+                    
+                    <label for="d1_leakage">Enter distance (d1) in meters:</label>
+                    <input type="number" id="d1_leakage" value="0.0" step="0.0001">
+                    
+                    <label for="d2_leakage">Enter distance (d2) in meters:</label>
+                    <input type="number" id="d2_leakage" value="0.0" step="0.0001">
+                    
+                    <label for="t_leakage">Enter time (t) in seconds:</label>
+                    <input type="number" id="t_leakage" value="0.0" step="0.0001">
+                    
+                    <button onclick="calculateLeakageResistance()">Calculate Resistance</button>
+                    
+                    <div id="leakage-result" class="result"></div>
+                </div>
+            </div>
+            
+            <!-- Program 19: Internal resistance of a cell BG -->
+            <div id="program19" class="program">
+                <h2>Program 19: Internal Resistance of a Cell BG</h2>
+                <div>
+                    <label for="R_internal">Enter the resistance box value (R):</label>
+                    <input type="number" id="R_internal" value="0.0" step="0.01">
+                    
+                    <label for="d1_internal">Enter the kick in distance d1 (in meters):</label>
+                    <input type="number" id="d1_internal" value="0.0" step="0.0001">
+                    
+                    <label for="d2_internal">Enter the kick in distance d2 (in meters):</label>
+                    <input type="number" id="d2_internal" value="0.0" step="0.0001">
+                    
+                    <button onclick="calculateInternalResistance()">Calculate Internal Resistance</button>
+                    
+                    <div id="internal-result" class="result"></div>
+                </div>
+            </div>
+            
+            <!-- Program 20: Self inductance of a coil by Anderson method -->
+            <div id="program20" class="program">
+                <h2>Program 20: Self Inductance of a Coil by Anderson Method</h2>
+                <div>
+                    <label for="C_anderson">Enter the condenser value (C) in microfarads:</label>
+                    <input type="number" id="C_anderson" value="0.0" step="0.0001">
+                    
+                    <label for="Q_anderson">Enter the resistance box value Q (in ohms):</label>
+                    <input type="number" id="Q_anderson" value="0.0" step="0.01">
+                    
+                    <label for="R_anderson">Enter the resistance box value R (in ohms):</label>
+                    <input type="number" id="R_anderson" value="0.0" step="0.01">
+                    
+                    <label for="S_anderson">Enter the resistance box value S (in ohms):</label>
+                    <input type="number" id="S_anderson" value="0.0" step="0.01">
+                    
+                    <label for="M_anderson">Enter the resistance box value M (in ohms):</label>
+                    <input type="number" id="M_anderson" value="0.0" step="0.01">
+                    
+                    <button onclick="calculateSelfInduction()">Calculate Self-Inductance</button>
+                    
+                    <div id="anderson-result" class="result"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Helper functions
+        function dmsToDecimal(deg, minutes) {
+            return deg + (minutes / 60);
+        }
+
+        function decimalToDms(decimalDegrees) {
+            const degrees = Math.floor(decimalDegrees);
+            const minutesDecimal = (decimalDegrees - degrees) * 60;
+            const minutes = Math.floor(minutesDecimal);
+            let seconds = Math.round((minutesDecimal - minutes) * 60);
+            
+            if (seconds === 60) {
+                seconds = 0;
+                minutes++;
+            }
+            if (minutes === 60) {
+                minutes = 0;
+                degrees++;
+            }
+            return { degrees, minutes, seconds };
+        }
+
+        function calculateValue(thetaDeg, thetaMin, l) {
+            const thetaDecimal = dmsToDecimal(thetaDeg, thetaMin);
+            const resultDecimal = thetaDecimal / (10 * l);
+            return decimalToDms(resultDecimal);
+        }
+
+        function calculateErrorPercentage(standardDeg, standardMin, observedDeg, observedMin) {
+            const standardDecimal = dmsToDecimal(standardDeg, standardMin);
+            const observedDecimal = dmsToDecimal(observedDeg, observedMin);
+            const errorPercentage = Math.abs((standardDecimal - observedDecimal) / standardDecimal) * 100;
+            return errorPercentage.toFixed(2);
+        }
+
+        // Program selection
+        function showProgram() {
+            const selector = document.getElementById('program-selector');
+            const selectedProgram = selector.value;
+            
+            // Hide all programs
+            const programs = document.querySelectorAll('.program');
+            programs.forEach(program => {
+                program.classList.remove('active');
+            });
+            
+            // Show selected program
+            document.getElementById(selectedProgram).classList.add('active');
+        }
+
+        // Program 1: Polarimeter
+        function calculatePolarimeterValue() {
+            const thetaDeg = parseFloat(document.getElementById('theta_deg').value);
+            const thetaMin = parseFloat(document.getElementById('theta_min').value);
+            const l = parseFloat(document.getElementById('l1').value);
+            
+            const result = calculateValue(thetaDeg, thetaMin, l);
+            document.getElementById('polarimeter-result').innerHTML = 
+                `Calculated Value: ${result.degrees}° ${result.minutes}' ${result.seconds}"`;
+        }
+
+        function calculateErrorPercentage() {
+            const standardDeg = parseFloat(document.getElementById('standard_deg').value);
+            const standardMin = parseFloat(document.getElementById('standard_min').value);
+            const observedDeg = parseFloat(document.getElementById('observed_deg').value);
+            const observedMin = parseFloat(document.getElementById('observed_min').value);
+            
+            const errorPercent = calculateErrorPercentage(standardDeg, standardMin, observedDeg, observedMin);
+            document.getElementById('error-result').innerHTML = 
+                `Error Percentage: ${errorPercent}%`;
+        }
+
+        // Program 2: Calibration of a High Range Voltmeter
+        function generateVoltmeterInputs() {
+            const n = parseInt(document.getElementById('n_calculations').value);
+            const container = document.getElementById('voltmeter-inputs');
+            container.innerHTML = '';
+            
+            for (let i = 0; i < n; i++) {
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <h3>Calculation ${i + 1}</h3>
+                    <label for="V_${i}">Enter V for calculation ${i + 1}:</label>
+                    <input type="number" id="V_${i}" value="0.0" step="0.1">
+                    
+                    <label for="l2_${i}">Enter l2 for calculation ${i + 1}:</label>
+                    <input type="number" id="l2_${i}" value="0.0" step="0.1">
+                `;
+                container.appendChild(div);
+            }
+        }
+
+        function generateVoltmeterResults() {
+            const n = parseInt(document.getElementById('n_calculations').value);
+            const l1 = parseFloat(document.getElementById('l1_voltmeter').value);
+            
+            const V_list = [];
+            const l2_list = [];
+            const V_prime_list = [];
+            const correction_list = [];
+            
+            for (let i = 0; i < n; i++) {
+                const V = parseFloat(document.getElementById(`V_${i}`).value);
+                const l2 = parseFloat(document.getElementById(`l2_${i}`).value);
+                
+                const V_prime = 50 * 1.08 * l2 / l1;
+                const correction = V_prime - V;
+                
+                V_list.push(V);
+                l2_list.push(l2);
+                V_prime_list.push(V_prime);
+                correction_list.push(correction);
+            }
+            
+            // Create table
+            let table = '<table border="1"><tr><th>Voltmeter readings</th><th>l2</th><th>V\' (Calculated Voltage)</th><th>Correction (V\' - V)</th></tr>';
+            
+            for (let i = 0; i < n; i++) {
+                table += `<tr>
+                    <td>${V_list[i]}</td>
+                    <td>${l2_list[i]}</td>
+                    <td>${V_prime_list[i].toFixed(4)}</td>
+                    <td>${correction_list[i].toFixed(4)}</td>
+                </tr>`;
+            }
+            
+            table += '</table>';
+            
+            // Display results
+            document.getElementById('voltmeter-results').innerHTML = table;
+            
+            // Note: In a real implementation, you would use a charting library like Chart.js to plot the graphs
+            document.getElementById('voltmeter-results').innerHTML += 
+                '<p>Graphs would be displayed here in a real implementation.</p>';
+        }
+
+        // Program 3: Sonometer
+        function calculateSonometerFrequency() {
+            const M = parseFloat(document.getElementById('M_sonometer').value);
+            const r = parseFloat(document.getElementById('r_sonometer').value);
+            const rho = parseFloat(document.getElementById('rho_sonometer').value);
+            const g = 9.81;
+            
+            const mass_of_wire = Math.PI * (r ** 2) * rho;
+            const frequency = (1 / 2) * Math.sqrt((M * g) / mass_of_wire);
+            
+            document.getElementById('sonometer-result').innerHTML = 
+                `Frequency of the tuning fork: ${frequency.toFixed(2)} Hz`;
+        }
+
+        // Program 4: BG Absolute Capacity of a Condenser
+        function calculateCondenserCapacitance() {
+            const T = parseFloat(document.getElementById('T_condenser').value);
+            const d1_R2 = parseFloat(document.getElementById('d1_R2').value);
+            const r2_d2 = parseFloat(document.getElementById('r2_d2').value);
+            const G = parseFloat(document.getElementById('G_condenser').value);
+            const a1 = parseFloat(document.getElementById('a1_condenser').value);
+            const a11 = parseFloat(document.getElementById('a11_condenser').value);
+            
+            const lambda_value = (2.303 / 10) * Math.log10(a1 / a11);
+            const C = (T / (2 * Math.PI * G)) * d1_R2 * r2_d2 * (1 + (lambda_value / 2));
+            const C_microfarad = C * 1e6;
+            
+            document.getElementById('condenser-result').innerHTML = 
+                `λ (lambda): ${lambda_value.toFixed(4)}<br>
+                 C (Capacitance): ${C_microfarad.toFixed(4)} µF`;
+        }
+
+        // Program 5: Astable Multivibrator
+        function generateMultivibratorInputs() {
+            const n = parseInt(document.getElementById('n_multivibrator').value);
+            const container = document.getElementById('multivibrator-inputs');
+            container.innerHTML = '';
+            
+            for (let i = 0; i < n; i++) {
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <h3>Calculation ${i + 1}</h3>
+                    <label for="R_${i}">Enter resistance (R) in ohms for calculation ${i + 1}:</label>
+                    <input type="number" id="R_${i}" value="0.0" step="0.1">
+                    
+                    <label for="C_${i}">Enter capacitance (C) in farads for calculation ${i + 1}:</label>
+                    <input type="number" id="C_${i}" value="0.0" step="0.000001">
+                    
+                    <button onclick="calculateMultivibratorFrequency(${i})">Calculate Frequency for Calculation ${i + 1}</button>
+                    
+                    <div id="multivibrator-result-${i}" class="result"></div>
+                `;
+                container.appendChild(div);
+            }
+        }
+
+        function calculateMultivibratorFrequency(index) {
+            const R = parseFloat(document.getElementById(`R_${index}`).value);
+            const C = parseFloat(document.getElementById(`C_${index}`).value);
+            
+            const frequency = 1 / (1.386 * R * C);
+            
+            document.getElementById(`multivibrator-result-${index}`).innerHTML = 
+                `Frequency: ${frequency.toFixed(6)} Hz`;
+        }
+
+        // Program 6: Air Wedge
+        function calculateAirWedgeThickness() {
+            const lambda_val = 5893e-10; // Wavelength in meters (5893 Å)
+            const l = parseFloat(document.getElementById('l_airwedge').value);
+            const beta = parseFloat(document.getElementById('beta_airwedge').value);
+            const m = parseInt(document.getElementById('m_airwedge').value);
+            
+            const thickness = (lambda_val * l * m) / (2 * beta);
+            
+            document.getElementById('airwedge-result').innerHTML = 
+                `Calculated thickness of wire (t): ${thickness.toExponential(6)} meters`;
+        }
+
+        // Program 7: Newton Rings
+        function computeNewtonR() {
+            const wavelength = 5893e-10; // 5893 Å in meters
+            const r_n = parseFloat(document.getElementById('r_n').value);
+            const r_nm = parseFloat(document.getElementById('r_nm').value);
+            const m = parseInt(document.getElementById('m_newton').value);
+            
+            const R_value = (r_nm**2 - r_n**2) / (m * wavelength);
+            
+            document.getElementById('newton-result').innerHTML = 
+                `Computed R value: ${R_value.toExponential(5)} m⁻¹`;
+        }
+
+        // Program 8: Minimum Deviation
+        function generateDeviationInputs() {
+            const n = parseInt(document.getElementById('n_deviation').value);
+            const container = document.getElementById('deviation-inputs');
+            container.innerHTML = '';
+            
+            for (let i = 0; i < n; i++) {
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <h3>Calculation ${i + 1}</h3>
+                    <label for="D_deg_${i}">Enter the degrees for D (set ${i + 1}):</label>
+                    <input type="number" id="D_deg_${i}" value="0.0">
+                    
+                    <label for="D_min_${i}">Enter the minutes for D (set ${i + 1}):</label>
+                    <input type="number" id="D_min_${i}" value="0.0" step="0.1">
+                    
+                    <label for="A_deg_${i}">Enter the degrees for A (set ${i + 1}):</label>
+                    <input type="number" id="A_deg_${i}" value="0.0">
+                    
+                    <label for="A_min_${i}">Enter the minutes for A (set ${i + 1}):</label>
+                    <input type="number" id="A_min_${i}" value="0.0" step="0.1">
+                    
+                    <button onclick="calculateDeviationCoefficient(${i})">Calculate Coefficient of Friction for Calculation ${i + 1}</button>
+                    
+                    <div id="deviation-result-${i}"></div>
+                `;
+                container.appendChild(div);
+            }
+        }
+
+        function calculateDeviationCoefficient(index) {
+            const D_deg = parseFloat(document.getElementById(`D_deg_${index}`).value);
+            const D_min = parseFloat(document.getElementById(`D_min_${index}`).value);
+            const A_deg = parseFloat(document.getElementById(`A_deg_${index}`).value);
+            const A_min = parseFloat(document.getElementById(`A_min_${index}`).value);
+            
+            const D_value = D_deg + (D_min / 60);
+            const A_value = A_deg + (A_min / 60);
+            
+            if (A_value === 0) {
+                document.getElementById(`deviation-result-${index}`).innerHTML = 
+                    "Error: A cannot be zero to avoid division by zero.";
+                return;
+            }
+            
+            const D_radians = D_value * Math.PI / 180;
+            const A_radians = A_value * Math.PI / 180;
+            const mu = Math.sin((D_radians + A_radians) / 2) / Math.sin(A_radians / 2);
+            
+            document.getElementById(`deviation-result-${index}`).innerHTML = 
+                `mu = ${mu.toFixed(6)}`;
+        }
+
+        // Program 9: Small Angle Prism
+        function showMethodFields() {
+            const method = document.getElementById('method').value;
+            
+            // Hide all method fields
+            const methodFields = document.querySelectorAll('.method-fields');
+            methodFields.forEach(field => {
+                field.style.display = 'none';
+            });
+            
+            // Show selected method fields
+            document.getElementById(`${method}_fields`).style.display = 'block';
+        }
+
+        function calculateRefractiveIndex() {
+            const method = document.getElementById('method').value;
+            let mu;
+            
+            if (method === 'normal_incidence') {
+                const A_deg = parseFloat(document.getElementById('A_deg_ni').value);
+                const A_min = parseFloat(document.getElementById('A_min_ni').value);
+                const A = A_deg + (A_min / 60);
+                
+                const d_deg = parseFloat(document.getElementById('d_deg_ni').value);
+                const d_min = parseFloat(document.getElementById('d_min_ni').value);
+                const d = d_deg + (d_min / 60);
+                
+                const A_rad = A * Math.PI / 180;
+                const d_rad = d * Math.PI / 180;
+                mu = Math.sin(A_rad + d_rad) / Math.sin(A_rad);
+            } 
+            else if (method === 'normal_emergence') {
+                const i_deg = parseFloat(document.getElementById('i_deg_ne').value);
+                const i_min = parseFloat(document.getElementById('i_min_ne').value);
+                const i = i_deg + (i_min / 60);
+                
+                const A_deg = parseFloat(document.getElementById('A_deg_ne').value);
+                const A_min = parseFloat(document.getElementById('A_min_ne').value);
+                const A = A_deg + (A_min / 60);
+                
+                const i_rad = i * Math.PI / 180;
+                const A_rad = A * Math.PI / 180;
+                mu = Math.sin(i_rad) / Math.sin(A_rad);
+            } 
+            else if (method === 'minimum_deviation') {
+                const D_deg = parseFloat(document.getElementById('D_deg_md').value);
+                const D_min = parseFloat(document.getElementById('D_min_md').value);
+                const D = D_deg + (D_min / 60);
+                
+                const A_deg = parseFloat(document.getElementById('A_deg_md').value);
+                const A_min = parseFloat(document.getElementById('A_min_md').value);
+                const A = A_deg + (A_min / 60);
+                
+                const D_rad = D * Math.PI / 180;
+                const A_rad = A * Math.PI / 180;
+                mu = Math.sin((D_rad + A_rad) / 2) / Math.sin(A_rad / 2);
+            }
+            
+            document.getElementById('prism-result').innerHTML = 
+                `Refractive Index (μ) using ${document.getElementById('method').options[document.getElementById('method').selectedIndex].text}: ${mu.toFixed(6)}`;
+        }
+
+        // Program 10: Spectrometer i-i' curve
+        function generateSpectrometerInputs() {
+            const n = parseInt(document.getElementById('n_spectrometer').value);
+            const container = document.getElementById('spectrometer-inputs');
+            container.innerHTML = '';
+            
+            for (let i = 0; i < n; i++) {
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <h3>Set ${i + 1}</h3>
+                    <label for="D_deg_spect_${i}">Enter D (Deviation Angle) degrees for set ${i + 1}:</label>
+                    <input type="number" id="D_deg_spect_${i}" value="0.0">
+                    
+                    <label for="D_min_spect_${i}">Enter D (Deviation Angle) minutes for set ${i + 1}:</label>
+                    <input type="number" id="D_min_spect_${i}" value="0.0" step="0.1">
+                    
+                    <label for="A_deg_spect_${i}">Enter A (Angle of Prism) degrees for set ${i + 1}:</label>
+                    <input type="number" id="A_deg_spect_${i}" value="0.0">
+                    
+                    <label for="A_min_spect_${i}">Enter A (Angle of Prism) minutes for set ${i + 1}:</label>
+                    <input type="number" id="A_min_spect_${i}" value="0.0" step="0.1">
+                    
+                    <button onclick="calculateSpectrometerMu(${i})">Calculate Refractive Index</button>
+                    
+                    <div id="spectrometer-result-${i}" class="result"></div>
+                `;
+                container.appendChild(div);
+            }
+        }
+
+        function calculateSpectrometerMu(index) {
+            const D_deg = parseFloat(document.getElementById(`D_deg_spect_${index}`).value);
+            const D_min = parseFloat(document.getElementById(`D_min_spect_${index}`).value);
+            const D = D_deg + (D_min / 60);
+            
+            const A_deg = parseFloat(document.getElementById(`A_deg_spect_${index}`).value);
+            const A_min = parseFloat(document.getElementById(`A_min_spect_${index}`).value);
+            const A = A_deg + (A_min / 60);
+            
+            const i = (D + A) / 2;
+            const A_rad = A * Math.PI / 180;
+            const i_rad = i * Math.PI / 180;
+            
+            if (Math.sin(A_rad / 2) === 0) {
+                document.getElementById(`spectrometer-result-${index}`).innerHTML = 
+                    "Error: Division by zero (sin(A/2) = 0)";
+                return;
+            }
+            
+            const mu = Math.sin(i_rad) / Math.sin(A_rad / 2);
+            
+            document.getElementById(`spectrometer-result-${index}`).innerHTML = 
+                `Calculated Refractive Index (μ) for set ${index + 1}: ${mu.toFixed(6)}`;
+        }
+
+        function plotSpectrometerResults() {
+            const n = parseInt(document.getElementById('n_spectrometer').value);
+            const D_values = [];
+            const mu_values = [];
+            
+            for (let i = 0; i < n; i++) {
+                const D_deg = parseFloat(document.getElementById(`D_deg_spect_${i}`).value);
+                const D_min = parseFloat(document.getElementById(`D_min_spect_${i}`).value);
+                const D = D_deg + (D_min / 60);
+                
+                const A_deg = parseFloat(document.getElementById(`A_deg_spect_${i}`).value);
+                const A_min = parseFloat(document.getElementById(`A_min_spect_${i}`).value);
+                const A = A_deg + (A_min / 60);
+                
+                const i_val = (D + A) / 2;
+                const A_rad = A * Math.PI / 180;
+                const i_rad = i_val * Math.PI / 180;
+                
+                if (Math.sin(A_rad / 2) !== 0) {
+                    const mu = Math.sin(i_rad) / Math.sin(A_rad / 2);
+                    D_values.push(D);
+                    mu_values.push(mu);
+                }
+            }
+            
+            // Note: In a real implementation, you would use a charting library like Chart.js to plot the graph
+            document.getElementById('spectrometer-plot').innerHTML = 
+                `<p>Plot of D values vs μ values would be displayed here in a real implementation.</p>
+                 <p>D values: ${D_values.join(', ')}</p>
+                 <p>μ values: ${mu_values.join(', ')}</p>`;
+        }
+
+        // Program 11: Young's modulus (Koenig method)
+        function calculateYoungsModulusKoenig() {
+            const frequency = parseFloat(document.getElementById('frequency_koenig').value);
+            const length = parseFloat(document.getElementById('length_koenig').value);
+            const width = parseFloat(document.getElementById('width_koenig').value);
+            const height = parseFloat(document.getElementById('height_koenig').value);
+            const density = parseFloat(document.getElementById('density_koenig').value);
+            
+            const I = (width * Math.pow(height, 3)) / 12;
+            const A = width * height;
+            const E = Math.pow(2 * Math.PI * frequency, 2) * (density * A * Math.pow(length, 4)) / I;
+            
+            document.getElementById('koenig-result').innerHTML = 
+                `The Young's Modulus of the material is: ${E.toExponential(2)} Pa`;
+        }
+
+        // Program 12: Young's modulus (Non-uniform bending)
+        function calculateYoungsModulusNonuniform() {
+            const force = parseFloat(document.getElementById('force_nonuniform').value);
+            const original_length = parseFloat(document.getElementById('original_length_nonuniform').value);
+            const change_in_length = parseFloat(document.getElementById('change_length_nonuniform').value);
+            const area = parseFloat(document.getElementById('area_nonuniform').value);
+            
+            if (change_in_length === 0 || original_length === 0) {
+                document.getElementById('nonuniform-result').innerHTML = 
+                    "Error: Change in length and original length cannot be zero";
+                return;
+            }
+            
+            const stress = force / area;
+            const strain = change_in_length / original_length;
+            const E = stress / strain;
+            
+            document.getElementById('nonuniform-result').innerHTML = 
+                `Young's Modulus: ${E.toExponential(2)} Pa`;
+        }
+
+        // Program 13: Young's modulus (Stretching method)
+        function calculateYoungsModulusStretching() {
+            const F = parseFloat(document.getElementById('F_stretching').value);
+            const L = parseFloat(document.getElementById('L_stretching').value);
+            const A = parseFloat(document.getElementById('A_stretching').value);
+            const delta_L = parseFloat(document.getElementById('delta_L_stretching').value);
+            
+            if (delta_L === 0) {
+                document.getElementById('stretching-result').innerHTML = 
+                    "Error: Change in length cannot be zero";
+                return;
+            }
+            
+            const E = (F * L) / (A * delta_L);
+            
+            document.getElementById('stretching-result').innerHTML = 
+                `Young's Modulus: ${E.toExponential(2)} Pa`;
+        }
+
+        // Program 14: Young's modulus (Uniform bending)
+        function calculateYoungsModulusUniform() {
+            const m = parseFloat(document.getElementById('m_uniform').value);
+            const L = parseFloat(document.getElementById('L_uniform').value);
+            const b = parseFloat(document.getElementById('b_uniform').value);
+            const d = parseFloat(document.getElementById('d_uniform').value);
+            const y = parseFloat(document.getElementById('y_uniform').value);
+            const g = 9.81;
+            
+            const Y = (m * g * Math.pow(L, 3)) / (4 * b * Math.pow(d, 3) * y);
+            
+            document.getElementById('uniform-result').innerHTML = 
+                `Young's Modulus (Y) = ${Y.toExponential(2)} N/m²`;
+        }
+
+        // Program 15: Young's modulus (Cantilever)
+        function calculateYoungsModulusCantilever() {
+            const L = parseFloat(document.getElementById('L_cantilever').value);
+            const F = parseFloat(document.getElementById('F_cantilever').value);
+            const b = parseFloat(document.getElementById('b_cantilever').value);
+            const d = parseFloat(document.getElementById('d_cantilever').value);
+            const delta = parseFloat(document.getElementById('delta_cantilever').value);
+            
+            const E = (4 * Math.pow(L, 3) * F) / (b * Math.pow(d, 3) * delta);
+            
+            document.getElementById('cantilever-result').innerHTML = 
+                `Young's modulus (E) = ${E.toExponential(2)} Pa`;
+        }
+
+        // Program 16: Absolute mutual inductance
+        function calculateMutualInductance() {
+            const r = parseFloat(document.getElementById('r_inductance').value);
+            const T = parseFloat(document.getElementById('T_inductance').value);
+            const a1 = parseFloat(document.getElementById('a1_inductance').value);
+            const a11 = parseFloat(document.getElementById('a11_inductance').value);
+            const d1 = parseFloat(document.getElementById('d1_inductance').value);
+            const d2 = parseFloat(document.getElementById('d2_inductance').value);
+            
+            const lambda_value = 2.303 * Math.log(a1 / a11);
+            const M = (r * T / (2 * Math.PI)) * (1 + lambda_value / 2) * (d1 / d2);
+            
+            document.getElementById('inductance-result').innerHTML = 
+                `The absolute mutual inductance (M) is: ${M.toExponential(4)} H`;
+        }
+
+        // Program 17: Comparison of mutual inductance
+        function calculateMutualInductanceRatio() {
+            const S1 = parseFloat(document.getElementById('S1').value);
+            const S2 = parseFloat(document.getElementById('S2').value);
+            const R1 = parseFloat(document.getElementById('R1').value);
+            const R2 = parseFloat(document.getElementById('R2').value);
+            
+            const ratio = (S1 + R1) / (S2 + R2);
+            
+            document.getElementById('mutual-inductance-result').innerHTML = 
+                `The ratio of M1 to M2 is: ${ratio.toFixed(4)}`;
+        }
+
+        // Program 18: High resistance by leakage method
+        function calculateLeakageResistance() {
+            const C_microfarads = parseFloat(document.getElementById('C_leakage').value);
+            const d1_meters = parseFloat(document.getElementById('d1_leakage').value);
+            const d2_meters = parseFloat(document.getElementById('d2_leakage').value);
+            const t_seconds = parseFloat(document.getElementById('t_leakage').value);
+            
+            const C_farads = C_microfarads * 1e-6;
+            const log_term = Math.log10(d1_meters / d2_meters);
+            
+            if (log_term === 0) {
+                document.getElementById('leakage-result').innerHTML = 
+                    "Error: log term cannot be zero (d1/d2 cannot be 1)";
+                return;
+            }
+            
+            const R_ohms = t_seconds / (2.303 * C_farads * log_term);
+            const R_mega_ohms = R_ohms * 1e-6;
+            
+            document.getElementById('leakage-result').innerHTML = 
+                `Resistance R: ${R_mega_ohms.toExponential(4)} 10^6 (M)ohms`;
+        }
+
+        // Program 19: Internal resistance of a cell BG
+        function calculateInternalResistance() {
+            const R = parseFloat(document.getElementById('R_internal').value);
+            const d1 = parseFloat(document.getElementById('d1_internal').value);
+            const d2 = parseFloat(document.getElementById('d2_internal').value);
+            
+            const B = R * (d1 - d2) / d2;
+            
+            document.getElementById('internal-result').innerHTML = 
+                `The internal resistance of the cell (B) is: ${B.toFixed(4)} Ω`;
+        }
+
+        // Program 20: Self inductance of a coil by Anderson method
+        function calculateSelfInduction() {
+            const C = parseFloat(document.getElementById('C_anderson').value) * 1e-6;
+            const Q = parseFloat(document.getElementById('Q_anderson').value);
+            const R = parseFloat(document.getElementById('R_anderson').value);
+            const S = parseFloat(document.getElementById('S_anderson').value);
+            const M = parseFloat(document.getElementById('M_anderson').value);
+            
+            const L = C * (R * Q + M * (R + S));
+            
+            document.getElementById('anderson-result').innerHTML = 
+                `The self-induction L is: ${L.toExponential(4)} Henry`;
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up event listeners for dynamic inputs
+            document.getElementById('n_calculations').addEventListener('change', generateVoltmeterInputs);
+            document.getElementById('n_multivibrator').addEventListener('change', generateMultivibratorInputs);
+            document.getElementById('n_deviation').addEventListener('change', generateDeviationInputs);
+            document.getElementById('n_spectrometer').addEventListener('change', generateSpectrometerInputs);
+            
+            // Generate initial inputs if needed
+            generateVoltmeterInputs();
+            generateMultivibratorInputs();
+            generateDeviationInputs();
+            generateSpectrometerInputs();
+            
+            // Show method fields for Program 9
+            showMethodFields();
+        });
+    </script>
+</body>
+</html>
